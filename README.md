@@ -59,6 +59,9 @@ CUDA_VISIBLE_DEVICES=0,1 python -u train.py --work-path ./experiments/cifar10/pr
 
 ## 4 GPUs for densenet190bc
 CUDA_VISIBLE_DEVICES=0,1,2,3 python -u train.py --work-path ./experiments/cifar10/densenet190bc
+
+## 5 GPU for vgg19 inference
+CUDA_VISIBLE_DEVICES=0 python eval.py --work-path ./experiments/cifar10/vgg19
 ``` 
 
 We use yaml file ``config.yaml`` to save the parameters, check any files in `./experimets` for more details.  
