@@ -57,12 +57,16 @@ def eval(test_loader, net, device):
             _, predicted = outputs.max(1)
             total += targets.size(0)
             correct += predicted.eq(targets).sum().item()
-            logger.info(
-                "   == test acc: {:6.3f}% | true label : {}, predict as : {}".format(
-                     100.0 * correct / total, targets, predicted
-                )
+            # logger.info(
+            #     "   == test acc: {:6.3f}% | true label : {}, predict as : {}".format(
+            #          100.0 * correct / total, targets, predicted
+            #     )
+            # )
+        logger.info(
+            "   == test acc: {:6.3f}% , model best prec : {:6.3f}%".format(
+                100.0 * correct / total, best_prec
             )
-
+        )
 
 def one_image_demo(image_path, net, device):
     net.eval()
@@ -90,6 +94,7 @@ def main():
     ckpt_file_name = args.work_path + "/" + config.ckpt_name + "_best.pth.tar"
     checkpoint = torch.load(ckpt_file_name)
     net.load_state_dict({k.replace('module.',''):v for k,v in checkpoint["state_dict"].items()}, strict=True)
+    best_prec = checkpoint["best_prec"]
     logger.info(net)
     logger.info(" == total parameters: " + str(count_parameters(net)))
 
@@ -102,9 +107,6 @@ def main():
 
     net.to(device)
 
-    # resume from a checkpoint
-    best_prec = 0
-
     # load training data, do data augmentation and get data loader
     transform_train = transforms.Compose(data_augmentation(config))
     transform_test = transforms.Compose(data_augmentation(config, is_train=False))
@@ -113,8 +115,8 @@ def main():
 
 
     # one_image_demo demo
-    image_path = "./data/cifar.jpg"
-    one_image_demo(image_path, net, device)
+    # image_path = "./data/cifar.jpg"
+    # one_image_demo(image_path, net, device)
 
 
 if __name__ == "__main__":
